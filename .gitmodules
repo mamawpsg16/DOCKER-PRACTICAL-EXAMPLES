@@ -1,0 +1,3 @@
+[submodule "gettin-started-app"]
+	path = gettin-started-app
+	url = https://github.com/mamawpsg16/DOCKER-PRACTICAL-EXAMPLES.git
