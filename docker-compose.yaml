@@ -1,0 +1,38 @@
+version: "3.8" #docker compose version
+services:  #setup image
+  api:
+    build: # instruct how to build the image where the Dockerfile is
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: api_c
+    ports: #port mapping
+      - "5000:5000"
+    volumes: #local:container
+      - ./api:/app #bind ./api to /app of container
+      - /app/node_modules #prevents the bind mount from overwriting the container's node_modules
+  myblog:
+    build: ./myblog
+    container_name: myblog_c
+    ports:
+      - "3000:3000"
+    volumes: 
+      - ./myblog:/app
+    stdin_open: true #interactive mode
+    tty: true #interactive mode
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - todo-mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: todos 
+      # MYSQL_PASSWORD: secret
+      # MYSQL_DB: todos
+
+volumes:
+  todo-mysql-data:
+    # environment:
+    #   MYSQL_HOST: mysql
+    #   MYSQL_USER: root
+    #   MYSQL_PASSWORD: secret
+    #   MYSQL_DB: todos

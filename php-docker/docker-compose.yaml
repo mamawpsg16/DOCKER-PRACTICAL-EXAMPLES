@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db
+    environment:
+      PMA_HOST: db 
+      PMA_USER: user
+      PMA_PASSWORD: password 
+     
+  app:
+    image: php:7.4-fpm
+    volumes: 
+      - ./app:/var/www/html
+    links:
+      - db 
+    user: 'www-data:www-data'
+
+  webserver:
+    image: nginx:alpine
+    ports:
+      - 8081:80
+    volumes:
+      - ./app:/var/www/html 
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    links:
+      - app
